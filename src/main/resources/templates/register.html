@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Create Account | Eco-Tracker</title>
+</head>
+<body>
+    <div th:fragment="content" class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="eco-card p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="stat-icon green mx-auto mb-2"><i class="fa-solid fa-user-plus"></i></div>
+                        <h3 class="fw-bold">Join Eco-Tracker</h3>
+                        <p class="text-muted small">Register to book doorstep recyclables collection</p>
+                    </div>
+
+                    <form th:action="@{/register}" th:object="${registrationRequest}" method="post">
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label for="fullName" class="form-label fw-semibold">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" th:field="*{fullName}"
+                                   th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid' : ''"
+                                   placeholder="e.g. Maya Johnson" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-semibold">Email Address</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                   placeholder="maya@example.com" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label for="phone" class="form-label fw-semibold">Contact Phone (Optional)</label>
+                            <input type="text" class="form-control" id="phone" th:field="*{phone}"
+                                   placeholder="+1-555-0188">
+                            <div class="form-text text-muted small">Used by collectors to coordinate arrival.</div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="password" class="form-label fw-semibold">Password</label>
+                                <input type="password" class="form-control" id="password" th:field="*{password}"
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                       placeholder="At least 6 chars" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="confirmPassword" class="form-label fw-semibold">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}"
+                                       th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
+                                       placeholder="Repeat password" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-eco-primary w-100 py-2 mb-3">
+                            <i class="fa-solid fa-check me-2"></i> Register Account
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <span class="text-muted small">Already have an account?</span>
+                        <a th:href="@{/login}" class="fw-semibold text-success ms-1 small">Sign in</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

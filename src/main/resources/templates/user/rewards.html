@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>My Rewards & Streaks | Eco-Tracker</title>
+</head>
+<body>
+    <div th:fragment="content" class="container py-3">
+        <!-- Header -->
+        <div class="mb-4">
+            <h2 class="fw-bold mb-1"><i class="fa-solid fa-award text-warning me-2"></i> Eco-Rewards & Recycling Streaks</h2>
+            <p class="text-muted">Earn points for every verified kilogram of recyclable waste and keep your eco-streak alive!</p>
+        </div>
+
+        <!-- Top Stat Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="eco-card p-4 text-center h-100 bg-success bg-opacity-10 border-success">
+                    <span class="text-success text-uppercase small fw-bold">Current Balance</span>
+                    <h1 class="display-4 fw-bold text-success my-2" th:text="${rewards.totalPoints}">0</h1>
+                    <span class="badge bg-success px-3 py-2 rounded-pill">Total Available Points</span>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="eco-card p-4 text-center h-100 bg-warning bg-opacity-10 border-warning">
+                    <span class="text-warning-emphasis text-uppercase small fw-bold">Active Recycling Streak</span>
+                    <h1 class="display-4 fw-bold text-warning-emphasis my-2">
+                        <i class="fa-solid fa-fire text-danger me-1"></i><span th:text="${rewards.currentStreak}">0</span> <small class="fs-4">days</small>
+                    </h1>
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Keep recycling to maintain!</span>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="eco-card p-4 text-center h-100 bg-info bg-opacity-10 border-info">
+                    <span class="text-info-emphasis text-uppercase small fw-bold">Personal Record</span>
+                    <h1 class="display-4 fw-bold text-info-emphasis my-2">
+                        <span th:text="${rewards.longestStreak}">0</span> <small class="fs-4">days</small>
+                    </h1>
+                    <span class="badge bg-info text-dark px-3 py-2 rounded-pill">Longest Historical Streak</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <!-- Points Transaction History -->
+            <div class="col-lg-8">
+                <div class="eco-card h-100">
+                    <div class="eco-card-header d-flex justify-content-between align-items-center">
+                        <span class="fs-5 fw-bold"><i class="fa-solid fa-receipt text-success me-2"></i> Points Transaction Ledger</span>
+                        <span class="badge bg-light text-muted border" th:text="${#lists.size(rewards.transactions) + ' entries'}">0</span>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Date</th>
+                                        <th>Request Ref</th>
+                                        <th>Reason / Description</th>
+                                        <th class="text-end pe-4">Points</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:if="${#lists.isEmpty(rewards.transactions)}">
+                                        <td colspan="4" class="text-center py-5 text-muted">
+                                            <i class="fa-solid fa-coins display-4 mb-3 d-block text-secondary"></i>
+                                            <h5>No reward transactions yet</h5>
+                                            <p class="small">Reward points are automatically credited upon verified collection completion.</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr th:each="tx : ${rewards.transactions}">
+                                        <td class="ps-4 text-muted small"
+                                            th:text="${#temporals.format(tx.createdAt, 'dd MMM yyyy, hh:mm a')}">
+                                            12 Nov 2026
+                                        </td>
+                                        <td>
+                                            <a th:if="${tx.requestId}" th:href="@{'/requests/' + ${tx.requestId}}"
+                                               class="text-decoration-none text-success fw-bold" th:text="${tx.requestReference}">
+                                                REQ-00001
+                                            </a>
+                                            <span th:unless="${tx.requestId}">-</span>
+                                        </td>
+                                        <td th:text="${tx.reason}">Reason</td>
+                                        <td class="text-end pe-4">
+                                            <span class="badge bg-success-subtle text-success fs-6 fw-bold">
+                                                +<span th:text="${tx.points}">50</span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reward Policy Explainer -->
+            <div class="col-lg-4">
+                <div class="eco-card p-4 h-100">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">
+                        <i class="fa-solid fa-scale-balanced text-success me-2"></i> Transparent Points Rules
+                    </h5>
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-success mb-1">
+                            <i class="fa-solid fa-laptop me-1"></i> E-Waste Collection
+                        </h6>
+                        <p class="small text-muted mb-0">
+                            <strong>50 base points</strong> plus <strong>10 points per kilogram</strong> of certified dismantled electronics.
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-primary mb-1">
+                            <i class="fa-solid fa-recycle me-1"></i> Dry-Waste Collection
+                        </h6>
+                        <p class="small text-muted mb-0">
+                            <strong>20 base points</strong> plus <strong>5 points per kilogram</strong> of clean dry cardboard, plastics, or metals.
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="fw-bold text-warning mb-1">
+                            <i class="fa-solid fa-fire me-1"></i> Streak Bonus
+                        </h6>
+                        <p class="small text-muted mb-0">
+                            Maintain recurring recycling collections within consecutive qualifying cycles to earn a bonus <strong>+15 points</strong> every pickup!
+                        </p>
+                    </div>
+
+                    <div class="p-3 bg-light rounded text-muted small">
+                        <i class="fa-solid fa-shield-halved text-success me-1"></i>
+                        <strong>Idempotent Guarantee:</strong> Every verified request creates exactly one unique reward transaction in the ledger.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

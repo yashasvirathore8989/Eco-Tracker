@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title th:text="'Request ' + ${request.referenceNumber} + ' | Eco-Tracker'">Request Detail | Eco-Tracker</title>
+</head>
+<body>
+    <div th:fragment="content" class="container py-3">
+        <!-- Navigation Breadcrumbs -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/dashboard}" class="text-success text-decoration-none">Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${request.referenceNumber}">REQ-00001</li>
+            </ol>
+        </nav>
+
+        <!-- Top Header Card -->
+        <div class="eco-card p-4 mb-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <span class="badge-status mb-2"
+                          th:classappend="'badge-status-' + ${#strings.toLowerCase(request.status)}">
+                        <i class="fa-solid fa-circle fa-2xs"></i>
+                        <span th:text="${request.statusDisplayName}">Status</span>
+                    </span>
+                    <h2 class="fw-bold mb-0">
+                        Pickup Request <span class="text-success" th:text="${'#' + request.referenceNumber}">#REQ-00001</span>
+                    </h2>
+                    <small class="text-muted">
+                        Created on <span th:text="${#temporals.format(request.createdAt, 'dd MMMM yyyy, hh:mm a')}">Date</span>
+                    </small>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    <form th:if="${request.cancellable}" th:action="@{'/requests/' + ${request.id} + '/cancel'}" method="post"
+                          onsubmit="return confirm('Are you sure you want to cancel this request?');">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="fa-solid fa-ban me-1"></i> Cancel Request
+                        </button>
+                    </form>
+
+                    <a th:href="@{/dashboard}" class="btn btn-outline-secondary">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Back
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Column: Request Details & Assigned Collector -->
+            <div class="col-lg-7">
+                <!-- Request Specifications -->
+                <div class="eco-card p-4 mb-4">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">
+                        <i class="fa-solid fa-box-open text-success me-2"></i> Waste & Schedule Details
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Waste Category</label>
+                            <span class="fw-bold fs-6" th:text="${request.wasteTypeName}">Electronic Waste</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Declared Quantity</label>
+                            <span class="fw-bold fs-6" th:text="${request.quantity + ' ' + request.unit}">10 kg</span>
+                        </div>
+                        <div class="col-12">
+                            <label class="text-muted small d-block">Items Description</label>
+                            <p class="mb-0 bg-light p-3 rounded" th:text="${request.description}">Detailed list of items</p>
+                        </div>
+                        <div class="col-12">
+                            <label class="text-muted small d-block">Pickup Location</label>
+                            <span class="fw-semibold" th:text="${request.address}">Full address</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Preferred Slot</label>
+                            <span class="fw-bold text-primary" th:text="${#temporals.format(request.preferredAt, 'EEEE, dd MMM yyyy, hh:mm a')}">
+                                Slot
+                            </span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Contact Phone</label>
+                            <span class="fw-semibold" th:text="${request.contactNumber != null ? request.contactNumber : request.userPhone}">+1-555</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assigned Collector Info (if assigned) -->
+                <div class="eco-card p-4 mb-4" th:if="${request.collectorName}">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">
+                        <i class="fa-solid fa-truck text-primary me-2"></i> Assigned Collector
+                    </h5>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stat-icon blue"><i class="fa-solid fa-id-badge"></i></div>
+                        <div>
+                            <h6 class="fw-bold mb-0" th:text="${request.collectorName}">Collector Name</h6>
+                            <span class="text-muted small" th:text="${'Service Area: ' + request.collectorServiceArea}">North Zone</span>
+                            <div class="mt-1" th:if="${request.collectorPhone}">
+                                <a th:href="${'tel:' + request.collectorPhone}" class="btn btn-sm btn-outline-primary py-0 px-2">
+                                    <i class="fa-solid fa-phone me-1"></i> <span th:text="${request.collectorPhone}">Phone</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certified Recycling Record (if completed) -->
+                <div class="eco-card p-4" th:if="${request.recyclingRecord}">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2 text-success">
+                        <i class="fa-solid fa-certificate me-2"></i> Certified Recycling Receipt
+                    </h5>
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Authorized Recycler</label>
+                            <span class="fw-bold" th:text="${request.recyclingRecord.recyclerName}">GreenCycle Ltd</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block">Verified Recycled Weight</label>
+                            <span class="fw-bold text-success" th:text="${request.recyclingRecord.materialWeight + ' kg'}">10 kg</span>
+                        </div>
+                        <div class="col-12 mt-2" th:if="${request.recyclingRecord.notes}">
+                            <label class="text-muted small d-block">Facility Notes</label>
+                            <p class="small text-muted mb-0 bg-light p-2 rounded" th:text="${request.recyclingRecord.notes}">Notes</p>
+                        </div>
+                        <div class="col-12 mt-2" th:if="${request.rewardPoints}">
+                            <div class="p-2 bg-success-subtle text-success rounded text-center fw-bold">
+                                <i class="fa-solid fa-award me-1"></i> You earned +<span th:text="${request.rewardPoints}">50</span> Reward Points for this collection!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Live Status History Timeline -->
+            <div class="col-lg-5">
+                <div class="eco-card p-4">
+                    <h5 class="fw-bold mb-4 border-bottom pb-2">
+                        <i class="fa-solid fa-clock-rotate-left text-success me-2"></i> Request Status History
+                    </h5>
+
+                    <ul class="timeline mb-0">
+                        <li class="timeline-item" th:each="hist : ${request.history}">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge-status"
+                                          th:classappend="'badge-status-' + ${#strings.toLowerCase(hist.newStatus)}">
+                                        <span th:text="${hist.newStatus}">STATUS</span>
+                                    </span>
+                                    <small class="text-muted" th:text="${#temporals.format(hist.changedAt, 'dd MMM, hh:mm a')}">Time</small>
+                                </div>
+                                <p class="small text-muted mb-1" th:text="${hist.note}">Transition notes...</p>
+                                <small class="text-secondary fst-italic" th:text="${'Action by: ' + hist.changedByName}">Actor</small>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

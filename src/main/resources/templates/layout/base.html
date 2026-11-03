@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="layout(title, content)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">Eco-Tracker</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <!-- Custom EcoTracker CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-eco sticky-top">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="fa-solid fa-leaf"></i>
+                <span>Eco-Tracker</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"><i class="fa-solid fa-house me-1"></i> Home</a>
+                    </li>
+
+                    <!-- User Navigation Links -->
+                    <li class="nav-item" sec:authorize="hasRole('USER')">
+                        <a class="nav-link" th:href="@{/dashboard}"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('USER')">
+                        <a class="nav-link" th:href="@{/requests/new}"><i class="fa-solid fa-plus-circle me-1"></i> New Pickup</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('USER')">
+                        <a class="nav-link" th:href="@{/rewards}"><i class="fa-solid fa-award me-1"></i> Rewards</a>
+                    </li>
+
+                    <!-- Collector Navigation Links -->
+                    <li class="nav-item" sec:authorize="hasRole('COLLECTOR')">
+                        <a class="nav-link text-primary fw-bold" th:href="@{/collector/dashboard}">
+                            <i class="fa-solid fa-truck-pickup me-1"></i> Collector Portal
+                        </a>
+                    </li>
+
+                    <!-- Admin Navigation Links -->
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link text-danger fw-bold" th:href="@{/admin/dashboard}">
+                            <i class="fa-solid fa-shield-halved me-1"></i> Admin Console
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- Auth Buttons & Profile -->
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link me-2" th:href="@{/login}">Sign In</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-eco-primary btn-sm" th:href="@{/register}">Register</a>
+                    </li>
+
+                    <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userMenu"
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="badge bg-light text-dark border p-2 rounded-circle">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <span sec:authentication="name" class="fw-semibold">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userMenu">
+                            <li><h6 class="dropdown-header">Signed in</h6></li>
+                            <li><a class="dropdown-item" th:href="@{/dashboard}"><i class="fa-solid fa-table-columns me-2"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" th:href="@{/rewards}"><i class="fa-solid fa-coins me-2"></i> My Rewards</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post" class="m-0 p-0">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fa-solid fa-right-from-bracket me-2"></i> Sign Out
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Global Flash Messages -->
+    <div class="container mt-3">
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+            <i class="fa-solid fa-circle-check fs-5"></i>
+            <span th:text="${successMessage}">Operation successful!</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+            <i class="fa-solid fa-triangle-exclamation fs-5"></i>
+            <span th:text="${errorMessage}">An error occurred!</span>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- Main Content Injection -->
+    <main class="py-4">
+        <div th:replace="${content}">
+            <p>Page content goes here...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-6 text-center text-md-start">
+                    <span class="fw-bold text-success"><i class="fa-solid fa-leaf"></i> Eco-Tracker</span>
+                    <span class="ms-2">Smart E-Waste & Dry-Waste Collection Management System</span>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <small>&copy; 2026 Eco-Tracker MVP &bull; Java 21 &bull; Spring Boot 3.x</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>

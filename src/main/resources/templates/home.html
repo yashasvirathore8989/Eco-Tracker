@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Eco-Tracker | Responsible Waste Collection & Recycling</title>
+</head>
+<body>
+    <div th:fragment="content">
+        <!-- Hero Section -->
+        <section class="hero-section mb-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <span class="badge bg-light text-dark px-3 py-2 rounded-pill fw-semibold mb-3">
+                            <i class="fa-solid fa-recycle text-success me-1"></i> Sustainable Living Made Effortless
+                        </span>
+                        <h1 class="hero-title mb-3">Responsible E-Waste & Dry-Waste Recycling at Your Doorstep</h1>
+                        <p class="hero-subtitle mb-4">
+                            Connect directly with verified collectors, track your pickup in real-time from request to certified recycling, and earn eco-rewards for every kilogram diverted from landfills.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a th:href="@{/requests/new}" class="btn btn-light btn-lg text-success fw-bold px-4 shadow-sm" sec:authorize="isAuthenticated()">
+                                <i class="fa-solid fa-truck-pickup me-2"></i> Schedule Pickup Now
+                            </a>
+                            <a th:href="@{/register}" class="btn btn-light btn-lg text-success fw-bold px-4 shadow-sm" sec:authorize="!isAuthenticated()">
+                                <i class="fa-solid fa-user-plus me-2"></i> Get Started Free
+                            </a>
+                            <a href="#howItWorks" class="btn btn-outline-light btn-lg px-4">
+                                Learn How It Works
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 text-center d-none d-lg-block">
+                        <div class="p-4 bg-white bg-opacity-10 rounded-4 border border-white border-opacity-25 shadow-lg">
+                            <i class="fa-solid fa-earth-americas display-1 text-light mb-3"></i>
+                            <h4 class="text-white fw-bold">100% Traceable Recycling</h4>
+                            <p class="text-white-50 small mb-0">From doorstep collection through state-authorized e-waste and recycling facilities.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Impact Statistics -->
+        <div class="container mb-5">
+            <div class="row g-3">
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-boxes-packing"></i></div>
+                        <div>
+                            <div class="stat-val" th:text="${totalPickups}">120</div>
+                            <div class="stat-lbl">Total Pickups</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fa-solid fa-check-double"></i></div>
+                        <div>
+                            <div class="stat-val" th:text="${totalCompleted}">98</div>
+                            <div class="stat-lbl">Recycled & Verified</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon amber"><i class="fa-solid fa-award"></i></div>
+                        <div>
+                            <div class="stat-val" th:text="${totalPoints}">4,500</div>
+                            <div class="stat-lbl">Points Awarded</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <div class="stat-val" th:text="${totalUsers}">45</div>
+                            <div class="stat-lbl">Eco Warriors</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works Section -->
+        <section id="howItWorks" class="container py-5 mb-5">
+            <div class="text-center mb-5">
+                <h6 class="text-success fw-bold text-uppercase tracking-wide">Simple 4-Step Process</h6>
+                <h2 class="fw-bold">How Eco-Tracker Works</h2>
+                <p class="text-muted">A streamlined, transparent workflow connecting citizens, admins, and certified collectors.</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="eco-card p-4 text-center h-100">
+                        <div class="stat-icon green mx-auto mb-3"><i class="fa-solid fa-calendar-plus"></i></div>
+                        <h5 class="fw-bold">1. Request Pickup</h5>
+                        <p class="text-muted small">Choose E-Waste or Dry-Waste, specify estimated quantity, enter your address, and select your preferred time slot.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="eco-card p-4 text-center h-100">
+                        <div class="stat-icon blue mx-auto mb-3"><i class="fa-solid fa-clipboard-check"></i></div>
+                        <h5 class="fw-bold">2. Admin Review</h5>
+                        <p class="text-muted small">The admin reviews item suitability, approves the schedule, and assigns a verified local collector.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="eco-card p-4 text-center h-100">
+                        <div class="stat-icon amber mx-auto mb-3"><i class="fa-solid fa-truck"></i></div>
+                        <h5 class="fw-bold">3. Doorstep Pickup</h5>
+                        <p class="text-muted small">The collector arrives within the confirmed window, checks materials, safely loads items, and logs collection outcome.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="eco-card p-4 text-center h-100">
+                        <div class="stat-icon purple mx-auto mb-3"><i class="fa-solid fa-trophy"></i></div>
+                        <h5 class="fw-bold">4. Earn Rewards</h5>
+                        <p class="text-muted small">Recycling facility confirms weight. You receive reward points in your ledger and build up your streak badge!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Accepted Waste Categories Section -->
+        <section class="container py-4 mb-5">
+            <div class="text-center mb-5">
+                <h6 class="text-success fw-bold text-uppercase tracking-wide">Responsible Segregation</h6>
+                <h2 class="fw-bold">What We Collect</h2>
+                <p class="text-muted">Proper classification ensures safe treatment and prevents toxic landfill contamination.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- E-Waste Card -->
+                <div class="col-md-6 col-lg-5">
+                    <div class="eco-card h-100 p-4 border-start border-4 border-success">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="stat-icon green"><i class="fa-solid fa-laptop"></i></div>
+                            <div>
+                                <h4 class="fw-bold mb-0">E-Waste (Electronic Waste)</h4>
+                                <span class="badge bg-success-subtle text-success">High Impact Category</span>
+                            </div>
+                        </div>
+                        <p class="text-muted">Safe dismantling and precious metal extraction for all electronic and battery-operated equipment.</p>
+                        <h6 class="fw-semibold mt-3">Accepted Items:</h6>
+                        <ul class="text-muted small ps-3 mb-4">
+                            <li>Old laptops, computers, CRT/LED monitors, cables & chargers</li>
+                            <li>Defunct smartphones, tablets, handheld electronics</li>
+                            <li>Household appliances: microwaves, toasters, blenders</li>
+                            <li>Lithium-ion batteries and electronic circuit boards</li>
+                        </ul>
+                        <div class="p-2 bg-light rounded text-center small text-secondary">
+                            <i class="fa-solid fa-gift text-warning me-1"></i> Reward: <strong>50 base pts + 10 pts per kg</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dry Waste Card -->
+                <div class="col-md-6 col-lg-5">
+                    <div class="eco-card h-100 p-4 border-start border-4 border-primary">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="stat-icon blue"><i class="fa-solid fa-recycle"></i></div>
+                            <div>
+                                <h4 class="fw-bold mb-0">Dry Recyclable Waste</h4>
+                                <span class="badge bg-primary-subtle text-primary">Clean Segregated Materials</span>
+                            </div>
+                        </div>
+                        <p class="text-muted">Clean, unsoiled solid household and office packaging materials sent directly to licensed recycling mills.</p>
+                        <h6 class="fw-semibold mt-3">Accepted Items:</h6>
+                        <ul class="text-muted small ps-3 mb-4">
+                            <li>Corrugated cardboard boxes, magazines, office paper</li>
+                            <li>PET plastic bottles, containers, clean poly bags</li>
+                            <li>Metal tins, aluminum soda cans, scrap copper/iron</li>
+                            <li>Glass bottles and unbroken glass packaging</li>
+                        </ul>
+                        <div class="p-2 bg-light rounded text-center small text-secondary">
+                            <i class="fa-solid fa-gift text-warning me-1"></i> Reward: <strong>20 base pts + 5 pts per kg</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Callout Banner -->
+        <section class="container mb-5">
+            <div class="p-5 rounded-4 bg-light border border-eco text-center shadow-sm">
+                <h3 class="fw-bold mb-2">Ready to Recycle Your Waste Responsibly?</h3>
+                <p class="text-muted mb-4 max-w-500 mx-auto">Join thousands of households making an environmental impact every single day.</p>
+                <a th:href="@{/register}" class="btn btn-eco-primary btn-lg px-4" sec:authorize="!isAuthenticated()">Create an Account</a>
+                <a th:href="@{/requests/new}" class="btn btn-eco-primary btn-lg px-4" sec:authorize="isAuthenticated()">Book a Collection Now</a>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

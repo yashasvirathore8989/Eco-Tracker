@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::content})}">
+<head>
+    <title>Sign In | Eco-Tracker</title>
+</head>
+<body>
+    <div th:fragment="content" class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="eco-card p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="stat-icon green mx-auto mb-2"><i class="fa-solid fa-leaf"></i></div>
+                        <h3 class="fw-bold">Sign In to Eco-Tracker</h3>
+                        <p class="text-muted small">Access your collection schedule, tracking & rewards</p>
+                    </div>
+
+                    <!-- Alerts for Errors or Logouts -->
+                    <div th:if="${param.error}" class="alert alert-danger py-2 px-3 small d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>Invalid email or password. Please try again.</span>
+                    </div>
+
+                    <div th:if="${param.logout}" class="alert alert-info py-2 px-3 small d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>You have been signed out successfully.</span>
+                    </div>
+
+                    <form th:action="@{/login}" method="post" class="needs-validation">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa-solid fa-envelope text-muted"></i></span>
+                                <input type="email" class="form-control" id="username" name="username"
+                                       placeholder="name@example.com" required autofocus>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label for="password" class="form-label fw-semibold mb-0">Password</label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fa-solid fa-lock text-muted"></i></span>
+                                <input type="password" class="form-control" id="password" name="password"
+                                       placeholder="••••••••" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-eco-primary w-100 py-2 mb-3">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i> Sign In
+                        </button>
+                    </form>
+
+                    <!-- Quick Demo Credentials Selector -->
+                    <div class="mt-4 pt-3 border-top text-center">
+                        <span class="text-muted small d-block mb-2 fw-semibold">Demo Quick-Fill Accounts:</span>
+                        <div class="d-flex flex-wrap gap-2 justify-content-center">
+                            <button type="button" class="btn btn-sm btn-outline-success"
+                                    onclick="fillCredentials('user@ecotracker.com', 'User@123')">
+                                <i class="fa-solid fa-user me-1"></i> User Demo
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                    onclick="fillCredentials('collector@ecotracker.com', 'Collector@123')">
+                                <i class="fa-solid fa-truck-pickup me-1"></i> Collector Demo
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+                                    onclick="fillCredentials('admin@ecotracker.com', 'Admin@123')">
+                                <i class="fa-solid fa-shield-halved me-1"></i> Admin Demo
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <span class="text-muted small">Don't have an account?</span>
+                        <a th:href="@{/register}" class="fw-semibold text-success ms-1 small">Create account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
